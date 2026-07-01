@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>strix — Convertí clientes en fans</title>
+<meta name="description" content="strix es la plataforma de fidelización que ayuda a tu negocio a identificar a sus mejores clientes, premiarlos y hacer que vuelvan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+<style>
+  :root{
+    --indigo:#5471FF;
+    --indigo-hover:#455CFF;
+    --indigo-light:#C0D5FF;
+    --dark:#1E2126;
+    --neutral:#DCDCDC;
+    --white:#FFFFFF;
+    --muted:#6b7280;
+    --muted-on-dark:#9ca3af;
+    --bg-2:#f3f4f6;
+    --border:#e5e7eb;
+    --font-display:'Plus Jakarta Sans', system-ui, sans-serif;
+    --font-body:'Inter', system-ui, sans-serif;
+    --radius-full:999px;
+    --radius-xl:12px;
+    --radius-lg:8px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font-body);
+    color:var(--dark);
+    background:var(--white);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  .container{max-width:1280px;margin:0 auto;padding:0 24px;}
+  .icon{width:20px;height:20px;stroke-width:1.8;}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 28px;border-radius:var(--radius-full);
+    font-weight:500;font-size:14px;white-space:nowrap;
+    transition:background .15s, color .15s, border-color .15s, transform .1s;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn-solid{background:var(--indigo);color:#fff;}
+  .btn-solid:hover{background:var(--indigo-hover);}
+  .btn-ghost-on-indigo{border:1px solid #fff;color:#fff;}
+  .btn-ghost-on-indigo:hover{background:rgba(255,255,255,.1);}
+  .btn-dark{background:#111827;color:#fff;padding:12px 20px;}
+  .btn-dark:hover{background:#000;}
+
+  /* ---------- Nav ---------- */
+  .nav-wrap{position:fixed;top:20px;left:0;right:0;z-index:100;display:flex;justify-content:center;padding:0 20px;}
+  .nav{
+    width:100%;max-width:1181px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+    border-radius:var(--radius-full);display:flex;align-items:center;justify-content:space-between;
+    padding:10px 12px 10px 24px;box-shadow:0 8px 24px rgba(30,33,38,.12);
+  }
+  .logo{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-0.02em;color:var(--dark);}
+  .logo .x{color:var(--indigo);}
+  .nav-links{display:flex;align-items:center;gap:30px;}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--dark);transition:color .15s;}
+  .nav-links a:hover{color:var(--indigo);}
+  .nav-cta{display:flex;align-items:center;gap:10px;}
+  .nav-cta .btn{padding:10px 20px;}
+  .nav-toggle{display:none;}
+  .nav-cta .btn-solid{white-space:nowrap;}
+  .mobile-menu{display:none;}
+  @media (max-width:880px){
+    .nav-links{display:none;}
+    .nav-cta .btn-solid span{display:none;}
+    .nav-cta .btn-solid{padding:12px;}
+    .nav-toggle{display:flex;width:36px;height:36px;align-items:center;justify-content:center;border-radius:var(--radius-full);background:var(--bg-2);color:var(--dark);}
+    .mobile-menu{
+      position:fixed;top:84px;left:20px;right:20px;z-index:99;
+      background:#fff;border-radius:16px;box-shadow:0 16px 40px rgba(30,33,38,.2);
+      padding:12px;flex-direction:column;gap:2px;
+    }
+    .mobile-menu.open{display:flex;}
+    .mobile-menu a{padding:12px 14px;border-radius:10px;font-size:15px;font-weight:500;}
+    .mobile-menu a:hover{background:var(--bg-2);}
+  }
+
+  /* ---------- Header / Hero slider ---------- */
+  .hero{position:relative;min-height:706px;overflow:hidden;display:flex;align-items:center;color:#fff;}
+  .hero-slides{position:absolute;inset:0;z-index:0;}
+  .hero-slide{
+    position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;
+    background-size:cover;background-position:center;filter:blur(2px) saturate(1.05);
+    transform:scale(1.02);
+  }
+  .hero-slide.active{opacity:1;}
+  .hero-overlay{position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to top, rgba(2,6,23,.35), rgba(84,113,255,.55));
+  }
+  .hero-glow{position:absolute;z-index:1;right:-12%;top:-20%;width:70%;height:140%;
+    background:radial-gradient(circle at 60% 40%, rgba(255,255,255,.18), transparent 60%);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;z-index:2;width:100%;padding:160px 0 90px;}
+  .hero-content{max-width:625px;}
+  .eyebrow-badge{
+    display:inline-flex;background:var(--indigo);padding:8px 14px;border-radius:6px;
+    font-size:12px;font-weight:500;margin-bottom:24px;
+  }
+  .hero-title{font-family:var(--font-display);font-weight:700;font-size:clamp(34px,4.6vw,48px);line-height:1.12;margin-bottom:16px;}
+  .hero-title .accent{color:var(--indigo-light);}
+  .hero-sub{font-size:16px;line-height:1.6;max-width:560px;color:rgba(255,255,255,.92);margin-bottom:30px;}
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;}
+  .hero-dots{position:relative;z-index:2;display:flex;justify-content:center;gap:10px;padding-bottom:28px;}
+  .hero-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.45);border:none;cursor:pointer;transition:background .2s,transform .2s;}
+  .hero-dot.active{background:var(--indigo);transform:scale(1.15);}
+
+  /* ---------- Sections shared ---------- */
+  section{padding:96px 0;}
+  .section-fade{background:linear-gradient(to bottom, #fff 0%, var(--bg-2) 62%);}
+  .eyebrow{font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--indigo);margin-bottom:12px;}
+  .section-title{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4vw,48px);line-height:1.1;margin-bottom:12px;}
+  .section-desc{font-size:18px;color:var(--muted);max-width:794px;line-height:1.5;}
+  .section-head{margin-bottom:56px;}
+  .on-dark .section-title, .on-dark .eyebrow + .section-title{color:#fff;}
+  .on-dark .section-desc{color:var(--muted-on-dark);}
+
+  /* ---------- Cómo funciona ---------- */
+  .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;}
+  .step-card{padding:24px;border-right:1px solid var(--border);}
+  .step-card:last-child{border-right:none;}
+  .step-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+  .step-icon{width:60px;height:60px;border-radius:8px;background:var(--bg-2);display:flex;align-items:center;justify-content:center;color:var(--indigo);}
+  .step-num{font-family:var(--font-display);font-weight:600;font-size:40px;color:#1f2937;}
+  .step-card h3{font-size:22px;font-weight:600;margin-bottom:8px;}
+  .step-card p{font-size:14px;color:var(--muted);line-height:1.5;}
+
+  /* ---------- Funcionalidades ---------- */
+  .feat-section{position:relative;overflow:hidden;}
+  .feat-blob{position:absolute;right:-260px;top:-80px;width:900px;height:900px;border-radius:50%;
+    background:radial-gradient(circle, rgba(84,113,255,.16), rgba(84,113,255,0) 70%);z-index:0;}
+  .feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1;}
+  .feat-list{display:flex;flex-direction:column;gap:28px;}
+  .feat-item{display:flex;gap:20px;}
+  .feat-icon{flex-shrink:0;width:44px;height:44px;border:1px solid var(--indigo);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--indigo);}
+  .feat-item h3{font-size:18px;font-weight:700;margin-bottom:6px;}
+  .feat-item p{font-size:14px;color:var(--muted);line-height:1.5;}
+  .feat-shot{border-radius:24px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(30,33,38,.35);}
+  .feat-shot img{width:100%;}
+
+  /* ---------- Canales (dark) ---------- */
+  .canales{background:var(--dark);position:relative;overflow:hidden;}
+  .canales .blob{position:absolute;left:38%;top:-10%;width:900px;height:900px;border-radius:50%;
+    background:radial-gradient(circle, rgba(84,113,255,.25), rgba(84,113,255,0) 70%);z-index:0;}
+  .canales .container{position:relative;z-index:1;}
+  .cards-3{display:grid;grid-template-columns:repeat(3,1fr);}
+  .ch-card{background:#fff;border:1px solid var(--border);padding:24px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;}
+  .ch-card:first-child{border-radius:12px 0 0 12px;}
+  .ch-card:last-child{border-radius:0 12px 12px 0;}
+  .ch-card + .ch-card{border-left:none;}
+  .ch-top{display:flex;gap:20px;}
+  .ch-icon{flex-shrink:0;width:60px;height:60px;display:flex;align-items:center;justify-content:center;color:var(--indigo);}
+  .ch-card h3{font-size:24px;font-weight:600;margin-bottom:8px;}
+  .ch-card p{font-size:14px;color:var(--muted);line-height:1.5;}
+  .ch-quote{display:flex;gap:8px;align-items:flex-start;border:2px solid var(--border);border-radius:12px;padding:12px;font-size:14px;color:var(--muted);}
+  .ch-quote svg{flex-shrink:0;color:var(--indigo);margin-top:2px;}
+
+  /* ---------- Industrias ---------- */
+  .industrias-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:42px 32px;}
+  .ind-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;transition:transform .2s, box-shadow .2s;}
+  .ind-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px -12px rgba(30,33,38,.18);}
+  .ind-card img{width:100%;height:200px;object-fit:cover;}
+  .ind-body{display:flex;gap:20px;padding:24px;align-items:center;}
+  .ind-icon{flex-shrink:0;width:60px;height:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .ind-body h3{font-size:24px;font-weight:600;margin-bottom:4px;}
+  .ind-body p{font-size:14px;color:var(--muted);}
+
+  /* ---------- FAQ ---------- */
+  .faq-layout{display:grid;grid-template-columns:1fr 0.85fr;gap:40px;align-items:start;}
+  .accordion{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;}
+  .acc-item + .acc-item{border-top:1px solid var(--border);}
+  .acc-trigger{width:100%;display:flex;align-items:center;gap:20px;padding:18px 20px;text-align:left;font-family:var(--font-body);}
+  .acc-trigger svg{flex-shrink:0;color:var(--muted);transition:transform .2s;}
+  .acc-trigger span{font-weight:600;font-size:16px;color:var(--dark);}
+  .acc-item.open .acc-trigger span{color:var(--indigo);}
+  .acc-item.open .acc-trigger svg{transform:rotate(180deg);color:var(--indigo);}
+  .acc-panel{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .acc-panel p{padding:0 20px 18px 56px;font-size:15px;color:var(--muted);line-height:1.6;}
+  .faq-visual{display:flex;justify-content:center;}
+  .faq-visual img{max-width:280px;border-radius:36px;box-shadow:0 30px 60px -20px rgba(30,33,38,.3);}
+  @media (max-width:880px){.faq-layout{grid-template-columns:1fr;}.faq-visual{display:none;}}
+
+  /* ---------- Contacto ---------- */
+  .contacto{background:var(--dark);position:relative;overflow:hidden;color:#fff;}
+  .contacto .blob{position:absolute;right:-10%;top:-30%;width:800px;height:800px;border-radius:50%;
+    background:radial-gradient(circle, rgba(84,113,255,.22), rgba(84,113,255,0) 70%);}
+  .contacto .container{position:relative;z-index:1;}
+  .contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+  .check-list{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+  .check-item{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--neutral);}
+  .check-item .dot{width:24px;height:24px;border:1px solid var(--indigo);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--indigo);flex-shrink:0;}
+  .form{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+  .field label{display:block;font-size:14px;font-weight:600;color:var(--neutral);margin-bottom:8px;}
+  .field input, .field select, .field textarea{
+    width:100%;background:#f3f4f6;border:none;border-radius:8px;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--dark);
+  }
+  .field textarea{resize:vertical;min-height:90px;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--indigo);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .submit-note{font-size:13px;color:var(--muted-on-dark);margin-top:4px;}
+  @media (max-width:880px){.contact-layout, .form-row{grid-template-columns:1fr;}}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--indigo);color:#fff;padding:56px 0;}
+  .footer-grid{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;}
+  .footer-brand{max-width:380px;}
+  .footer-brand .logo{color:#fff;font-size:32px;}
+  .footer-tagline{font-family:var(--font-display);font-weight:700;font-size:22px;margin:16px 0 12px;}
+  .footer-tagline .accent{color:var(--indigo-light);}
+  .footer-fine{font-size:12px;color:rgba(255,255,255,.8);}
+  .footer-cols{display:flex;gap:56px;flex-wrap:wrap;}
+  .footer-col h4{font-size:16px;font-weight:700;margin-bottom:14px;}
+  .footer-col a{display:block;font-size:14px;color:rgba(255,255,255,.9);margin-bottom:12px;}
+  .footer-col a:hover{color:#fff;text-decoration:underline;}
+  .social-row{display:flex;gap:12px;margin-top:14px;}
+  .social-row a{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;}
+
+  @media (max-width:1024px){
+    .feat-grid, .industrias-grid, .cards-3{grid-template-columns:1fr;}
+    .steps-grid{grid-template-columns:1fr 1fr;}
+    .ch-card, .ch-card:first-child, .ch-card:last-child{border-radius:12px;border-left:1px solid var(--border);}
+  }
+  @media (max-width:640px){
+    .steps-grid{grid-template-columns:1fr;}
+    .step-card{border-right:none;border-bottom:1px solid var(--border);}
+    section{padding:64px 0;}
+    .hero{min-height:auto;}
+    .hero-inner{padding:140px 0 70px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav class="nav">
+    <span class="logo">stri<span class="x">x</span></span>
+    <div class="nav-links">
+      <a href="#top">Home</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#canales">Canales</a>
+      <a href="#industrias">Industrias</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#contacto" class="btn btn-solid"><span>Empezar ahora</span><i data-lucide="arrow-right" class="icon" style="width:16px;height:16px"></i></a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <i data-lucide="menu" class="icon"></i>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#top">Home</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#canales">Canales</a>
+    <a href="#industrias">Industrias</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-slides">
+    <div class="hero-slide active" style="background-image:url('assets/img/header-club.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('assets/img/header-cafe.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('assets/img/header-bar.jpg')"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-glow"></div>
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <span class="eyebrow-badge">Plataforma de fidelización · Uruguay</span>
+      <h1 class="hero-title">Los negocios que crecen convierten clientes en <span class="accent">Fans</span></h1>
+      <p class="hero-sub">strix te ayuda a identificar a tus clientes más fieles, darles lo que merecen y hacer que hablen bien de vos.</p>
+      <div class="hero-ctas">
+        <a href="#contacto" class="btn btn-solid">Empezar ahora <i data-lucide="chevron-right" class="icon" style="width:14px;height:14px"></i></a>
+        <a href="#como-funciona" class="btn btn-ghost-on-indigo">Ver cómo funciona</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-dots">
+    <button class="hero-dot active" data-slide="0" aria-label="Slide 1"></button>
+    <button class="hero-dot" data-slide="1" aria-label="Slide 2"></button>
+    <button class="hero-dot" data-slide="2" aria-label="Slide 3"></button>
+  </div>
+</header>
+
+<section class="section-fade" id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Cómo funciona</div>
+      <h2 class="section-title">Configurás una vez. Funciona solo.</h2>
+      <p class="section-desc">No hay hardware que instalar ni caja que integrar. El cliente paga, escanea el QR de su factura y el sello queda registrado. Vos ves todo desde el panel.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-top"><div class="step-icon"><i data-lucide="palette" class="icon"></i></div><span class="step-num">01</span></div>
+        <h3>Armás tu tarjeta</h3>
+        <p>Elegís cuántas visitas necesita tu cliente para ganarse el premio. Ponés tu logo y listo en menos de cinco minutos.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-top"><div class="step-icon"><i data-lucide="scan-line" class="icon"></i></div><span class="step-num">02</span></div>
+        <h3>El cliente escanea</h3>
+        <p>Cada vez que vuelve, escanea el QR de su ticket y el sello queda registrado. Ponés tu logo y listo en menos de cinco minutos.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-top"><div class="step-icon"><i data-lucide="gift" class="icon"></i></div><span class="step-num">03</span></div>
+        <h3>Premiás cuando importa</h3>
+        <p>Al completar la tarjeta recibe su recompensa. Pero también podés mandarle un regalo antes de que lo espere — ese tipo de gesto no se olvida.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-top"><div class="step-icon"><i data-lucide="line-chart" class="icon"></i></div><span class="step-num">04</span></div>
+        <h3>Ves quién es quién</h3>
+        <p>El dashboard te muestra quiénes vienen seguido, cuánto gastan y hace cuánto no aparecen. Con eso decidís a quién premiar y cuándo mover el juego.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feat-section">
+  <div class="feat-blob"></div>
+  <div class="container feat-grid">
+    <div>
+      <div class="eyebrow">Funcionalidades</div>
+      <h2 class="section-title" style="margin-bottom:24px;">Las herramientas para que vuelvan siempre.</h2>
+      <div class="feat-list">
+        <div class="feat-item">
+          <div class="feat-icon"><i data-lucide="qr-code" class="icon"></i></div>
+          <div><h3>Sellos por QR de factura</h3><p>El cliente escanea el QR de su ticket y el sello queda registrado. No hay forma de acumular sin haber comprado — cada sello es real.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon"><i data-lucide="zap" class="icon"></i></div>
+          <div><h3>Multiplicadores de sellos</h3><p>¿El miércoles flojo? Activás sellos dobles para ese día y listo. También podés usarlo en fechas especiales o para empujar un producto puntual.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon"><i data-lucide="crown" class="icon"></i></div>
+          <div><h3>Tus 10 mejores clientes</h3><p>Sabés quiénes son. Podés mandarles un regalo directo, pasarlos a VIP o pedirles feedback privado. Eso es lo que los hace sentir parte de algo — y lo que los convierte en fans.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon"><i data-lucide="chart-area" class="icon"></i></div>
+          <div><h3>Panel de actividad</h3><p>Frecuencia de visita, ticket promedio, horarios pico, clientes que no volvieron. No son métricas de vanidad — son datos para tomar decisiones esta semana.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-icon"><i data-lucide="gift" class="icon"></i></div>
+          <div><h3>Canjes que no se falsifican</h3><p>Cada premio genera un QR de uso único. Tu equipo lo verifica desde el panel en segundos y queda registrado. Sin papel, sin discusiones.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="feat-shot"><img src="assets/img/dashboard-screenshot.png" alt="Panel de actividad de strix" loading="lazy"></div>
+  </div>
+</section>
+
+<section class="canales" id="canales">
+  <div class="blob"></div>
+  <div class="container">
+    <div class="section-head on-dark">
+      <div class="eyebrow">Canales</div>
+      <h2 class="section-title">Tres canales para llegar cuando <span style="color:var(--indigo)">tiene sentido.</span></h2>
+      <p class="section-desc">No se trata de mandar mensajes — se trata de mandar el mensaje correcto, al cliente correcto, en el momento correcto.</p>
+    </div>
+    <div class="cards-3">
+      <div class="ch-card">
+        <div class="ch-top">
+          <div class="ch-icon"><i data-lucide="bell-ring" style="width:32px;height:32px" class="icon"></i></div>
+          <div><h3>Push Notifications</h3><p>Para los momentos del día que vos manejás. Una promo de último momento, un recordatorio antes del cierre, un "hoy tenemos X". Rápido y directo.</p></div>
+        </div>
+        <div class="ch-quote"><i data-lucide="bell" style="width:16px;height:16px" class="icon"></i><span>"¡Hoy sellos x2 de 12 a 15hs! Pasá y aprovechá 🔥"</span></div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-top">
+          <div class="ch-icon" style="color:#25D366"><i data-lucide="message-circle" style="width:32px;height:32px" class="icon"></i></div>
+          <div><h3>WhatsApp</h3><p>El canal más personal que tenés. Úsalo con criterio — para el cliente que no vino en dos semanas, el que está a un sello de su premio, o el que cumple años esta semana. Cuando llega bien, se nota.</p></div>
+        </div>
+        <div class="ch-quote"><i data-lucide="message-circle" style="width:16px;height:16px" class="icon"></i><span>"Te extrañamos, Valentina. Volvé esta semana y te regalamos un sello extra 🎁"</span></div>
+      </div>
+      <div class="ch-card">
+        <div class="ch-top">
+          <div class="ch-icon"><i data-lucide="mail" style="width:32px;height:32px" class="icon"></i></div>
+          <div><h3>Email</h3><p>Para cuando tenés algo que vale la pena contar con más espacio. Novedades del negocio, recompensas disponibles, un agradecimiento a tus clientes más fieles.</p></div>
+        </div>
+        <div class="ch-quote"><i data-lucide="mail-open" style="width:16px;height:16px" class="icon"></i><span>"Completaste tu tarjeta 🎉 Tu café gratis te está esperando esta semana."</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-fade" id="industrias">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Industrias</div>
+      <h2 class="section-title">Los fans no son solo de marcas globales.</h2>
+      <p class="section-desc">Cualquier negocio donde el cliente puede volver tiene potencial de fidelización. La diferencia está en si lo trabajás o lo dejás al azar.</p>
+    </div>
+    <div class="industrias-grid">
+      <div class="ind-card">
+        <img src="assets/img/industria-gastronomia.jpg" alt="Gastronomía" loading="lazy">
+        <div class="ind-body"><div class="ind-icon" style="background:#ffedd5;color:#c2410c"><i data-lucide="soup" class="icon"></i></div><div><h3>Gastronomía</h3><p>Cafés, restaurantes, bares, panaderías</p></div></div>
+      </div>
+      <div class="ind-card">
+        <img src="assets/img/industria-belleza.jpg" alt="Belleza" loading="lazy">
+        <div class="ind-body"><div class="ind-icon" style="background:#fce7f3;color:#be185d"><i data-lucide="sparkles" class="icon"></i></div><div><h3>Belleza</h3><p>Peluquerías, centros de estética, salones</p></div></div>
+      </div>
+      <div class="ind-card">
+        <img src="assets/img/industria-deporte.jpg" alt="Deporte" loading="lazy">
+        <div class="ind-body"><div class="ind-icon" style="background:#fff5d6;color:#a16207"><i data-lucide="bike" class="icon"></i></div><div><h3>Deporte</h3><p>Gimnasios, canchas, espacios de fitness</p></div></div>
+      </div>
+      <div class="ind-card">
+        <img src="assets/img/industria-salud.jpg" alt="Salud" loading="lazy">
+        <div class="ind-body"><div class="ind-icon" style="background:#dcfce7;color:#15803d"><i data-lucide="stethoscope" class="icon"></i></div><div><h3>Salud</h3><p>Farmacias, veterinarias, consultorios</p></div></div>
+      </div>
+      <div class="ind-card">
+        <img src="assets/img/industria-retail.jpg" alt="Retail" loading="lazy">
+        <div class="ind-body"><div class="ind-icon" style="background:#fee2e2;color:#b91c1c"><i data-lucide="shopping-basket" class="icon"></i></div><div><h3>Retail</h3><p>Tiendas, boutiques, negocios de barrio</p></div></div>
+      </div>
+      <div class="ind-card">
+        <img src="assets/img/industria-servicios.jpg" alt="Servicios" loading="lazy">
+        <div class="ind-body"><div class="ind-icon" style="background:#ede9fe;color:#6d28d9"><i data-lucide="wrench" class="icon"></i></div><div><h3>Servicios</h3><p>Lavanderías, talleres, cualquier servicio recurrente</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Preguntas frecuentes</div>
+      <h2 class="section-title">Lo que nos suelen preguntar.</h2>
+    </div>
+    <div class="faq-layout">
+      <div class="accordion">
+        <div class="acc-item">
+          <button class="acc-trigger"><i data-lucide="chevron-down" class="icon"></i><span>¿Necesito integrar mi sistema de caja o POS?</span></button>
+          <div class="acc-panel"><p>No. strix funciona de forma independiente — no requiere integración con tu POS actual.</p></div>
+        </div>
+        <div class="acc-item open">
+          <button class="acc-trigger"><i data-lucide="chevron-down" class="icon"></i><span>¿Mis clientes tienen que descargar una app?</span></button>
+          <div class="acc-panel"><p>Los clientes acceden desde el navegador de su celular — sin descarga, sin fricción. Pueden elegir agregar el acceso directo a su pantalla de inicio para mayor comodidad.</p></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-trigger"><i data-lucide="chevron-down" class="icon"></i><span>¿En qué se diferencia strix de otras opciones del mercado?</span></button>
+          <div class="acc-panel"><p>Cada sello se valida contra una compra real vía QR de factura — no se puede acumular sin haber comprado, a diferencia de los sistemas de sellos manuales.</p></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-trigger"><i data-lucide="chevron-down" class="icon"></i><span>¿Cuánto tiempo lleva configurar todo?</span></button>
+          <div class="acc-panel"><p>Menos de cinco minutos: elegís cuántas visitas necesita la tarjeta, subís tu logo y ya podés empezar a sumar sellos.</p></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-trigger"><i data-lucide="chevron-down" class="icon"></i><span>¿Qué pasa con los datos de mis clientes?</span></button>
+          <div class="acc-panel"><p>Los datos son tuyos. strix los usa únicamente para que vos puedas identificar y premiar a tus mejores clientes.</p></div>
+        </div>
+      </div>
+      <div class="faq-visual"><img src="assets/img/header-bar.jpg" alt="strix en El Garaje Burgers"></div>
+    </div>
+  </div>
+</section>
+
+<section class="contacto" id="contacto">
+  <div class="blob"></div>
+  <div class="container contact-layout">
+    <div>
+      <div class="eyebrow">Contacto</div>
+      <h2 class="section-title">Empezá a construir tu comunidad de fans.</h2>
+      <p class="section-desc">Contanos sobre tu negocio. Te mostramos cómo funciona strix en tu rubro y si tiene sentido para lo que querés lograr. Sin presión.</p>
+      <div class="check-list">
+        <div class="check-item"><span class="dot"><i data-lucide="check" style="width:14px;height:14px" class="icon"></i></span>Respuesta en menos de 24hs hábiles</div>
+        <div class="check-item"><span class="dot"><i data-lucide="check" style="width:14px;height:14px" class="icon"></i></span>Demo personalizada a tu industria</div>
+        <div class="check-item"><span class="dot"><i data-lucide="check" style="width:14px;height:14px" class="icon"></i></span>Sin contrato de permanencia</div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:24px;font-weight:700;margin-bottom:16px;">Ponete en contacto</h3>
+      <form class="form" id="contact-form">
+        <div class="field"><label for="f-name">Nombre</label><input id="f-name" type="text" placeholder="Tu nombre" required></div>
+        <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="hola@tu-negocio.com" required></div>
+        <div class="form-row">
+          <div class="field"><label for="f-phone">Teléfono</label><input id="f-phone" type="tel" placeholder="+598 09X XXX XXX"></div>
+          <div class="field"><label for="f-industry">Industria</label>
+            <select id="f-industry">
+              <option value="">Tu rubro</option>
+              <option>Gastronomía</option><option>Belleza</option><option>Deporte</option>
+              <option>Salud</option><option>Retail</option><option>Servicios</option><option>Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="f-business">Nombre del negocio</label><input id="f-business" type="text" placeholder="¿Cómo se llama tu negocio?"></div>
+        <div class="field"><label for="f-goal">¿Qué querés lograr?</label><textarea id="f-goal" placeholder="Contanos brevemente tu situación y qué objetivos tenés..."></textarea></div>
+        <button type="submit" class="btn btn-solid" style="margin-top:6px;">Enviar mensaje <i data-lucide="send" style="width:14px;height:14px" class="icon"></i></button>
+        <p class="submit-note">Sin spam. Tu info solo se usa para contactarte.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <span class="logo">stri<span class="x" style="color:var(--indigo-light)">x</span></span>
+      <span class="eyebrow-badge" style="background:rgba(255,255,255,.15);margin:14px 0;display:inline-flex;">Plataforma de fidelización · Uruguay</span>
+      <p class="footer-tagline">Los negocios que crecen convierten clientes en <span class="accent">Fans</span></p>
+      <p class="footer-fine">Hecho en Uruguay — © 2026 Strix App. Todos los derechos reservados.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>Explora</h4>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#canales">Canales</a>
+        <a href="#industrias">Industrias</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Términos y Condiciones</a>
+        <a href="#">Política de Privacidad</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="#contacto" class="btn btn-dark" style="margin-bottom:14px;">Empezá ahora <i data-lucide="chevron-right" style="width:14px;height:14px" class="icon"></i></a>
+        <a href="mailto:info@strix.fan">info@strix.fan</a>
+        <div class="social-row">
+          <a href="#" aria-label="Instagram"><i data-lucide="instagram" class="icon" style="width:18px;height:18px"></i></a>
+          <a href="#" aria-label="WhatsApp"><i data-lucide="message-circle" class="icon" style="width:18px;height:18px"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.lucide) lucide.createIcons();
+
+    // Hero slider
+    var slides = document.querySelectorAll('.hero-slide');
+    var dots = document.querySelectorAll('.hero-dot');
+    var current = 0;
+    function goTo(i){
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = i;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+    dots.forEach(function(dot, i){ dot.addEventListener('click', function(){ goTo(i); }); });
+    setInterval(function(){ goTo((current + 1) % slides.length); }, 5000);
+
+    // FAQ accordion
+    document.querySelectorAll('.acc-item').forEach(function(item){
+      var trigger = item.querySelector('.acc-trigger');
+      var panel = item.querySelector('.acc-panel');
+      if (item.classList.contains('open')) panel.style.maxHeight = panel.scrollHeight + 'px';
+      trigger.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        document.querySelectorAll('.acc-item.open').forEach(function(openItem){
+          openItem.classList.remove('open');
+          openItem.querySelector('.acc-panel').style.maxHeight = null;
+        });
+        if (!isOpen){
+          item.classList.add('open');
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
+      });
+    });
+
+    // Mobile menu toggle
+    var navToggle = document.getElementById('nav-toggle');
+    var mobileMenu = document.getElementById('mobile-menu');
+    navToggle.addEventListener('click', function(){
+      var isOpen = mobileMenu.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', isOpen);
+      navToggle.innerHTML = isOpen ? '<i data-lucide="x" class="icon"></i>' : '<i data-lucide="menu" class="icon"></i>';
+      if (window.lucide) lucide.createIcons();
+    });
+    mobileMenu.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        mobileMenu.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.innerHTML = '<i data-lucide="menu" class="icon"></i>';
+        if (window.lucide) lucide.createIcons();
+      });
+    });
+
+    // Contact form (static placeholder — no backend wired up)
+    document.getElementById('contact-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      alert('¡Gracias! Te vamos a contactar a la brevedad.');
+      e.target.reset();
+    });
+  });
+</script>
+
+</body>
+</html>
