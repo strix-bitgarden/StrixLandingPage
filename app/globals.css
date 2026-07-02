@@ -66,8 +66,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;}
 .mobile-menu{display:none;}
 @media (max-width:880px){
   .nav-links{display:none;}
-  .nav-cta .btn-solid span{display:none;}
-  .nav-cta .btn-solid{padding:12px;}
+  .nav-cta .btn-solid{padding:10px 14px;}
   .nav-toggle{display:flex;width:36px;height:36px;align-items:center;justify-content:center;border-radius:var(--radius-full);background:var(--bg-2);color:var(--dark);}
   .mobile-menu{
     position:fixed;top:84px;left:20px;right:20px;z-index:99;
