@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>strix — Convertí clientes en fans</title>
 <meta name="description" content="strix es la plataforma de fidelización que ayuda a tu negocio a identificar a sus mejores clientes, premiarlos y hacer que vuelvan.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+<script src="https://unpkg.com/lucide@1.23.0/dist/umd/lucide.js" defer></script>
 <style>
   :root{
     --indigo:#5471FF;
@@ -105,8 +107,15 @@
     background:radial-gradient(circle at 60% 40%, rgba(255,255,255,.18), transparent 60%);
     pointer-events:none;
   }
-  .hero-inner{position:relative;z-index:2;width:100%;padding:160px 0 90px;}
+  .hero-inner{position:relative;z-index:2;width:100%;padding:160px 0 90px;display:flex;align-items:center;justify-content:space-between;gap:40px;}
   .hero-content{max-width:625px;}
+  .hero-phone{flex-shrink:0;width:280px;}
+  .phone-frame{position:relative;border-radius:38px;background:#0b0b0f;padding:12px;box-shadow:0 40px 80px -20px rgba(0,0,0,.55),0 0 0 2px rgba(255,255,255,.08);}
+  .phone-frame::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:80px;height:20px;background:#0b0b0f;border-radius:0 0 12px 12px;z-index:2;}
+  .phone-screen{position:relative;border-radius:26px;overflow:hidden;aspect-ratio:370/850;}
+  .phone-screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .hero-phone-img{opacity:0;transition:opacity 1.1s ease;}
+  .hero-phone-img.active{opacity:1;}
   .eyebrow-badge{
     display:inline-flex;background:var(--indigo);padding:8px 14px;border-radius:6px;
     font-size:12px;font-weight:500;margin-bottom:24px;
@@ -115,9 +124,6 @@
   .hero-title .accent{color:var(--indigo-light);}
   .hero-sub{font-size:16px;line-height:1.6;max-width:560px;color:rgba(255,255,255,.92);margin-bottom:30px;}
   .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;}
-  .hero-dots{position:relative;z-index:2;display:flex;justify-content:center;gap:10px;padding-bottom:28px;}
-  .hero-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.45);border:none;cursor:pointer;transition:background .2s,transform .2s;}
-  .hero-dot.active{background:var(--indigo);transform:scale(1.15);}
 
   /* ---------- Sections shared ---------- */
   section{padding:96px 0;}
@@ -191,7 +197,7 @@
   .acc-panel{max-height:0;overflow:hidden;transition:max-height .25s ease;}
   .acc-panel p{padding:0 20px 18px 56px;font-size:15px;color:var(--muted);line-height:1.6;}
   .faq-visual{display:flex;justify-content:center;}
-  .faq-visual img{max-width:280px;border-radius:36px;box-shadow:0 30px 60px -20px rgba(30,33,38,.3);}
+  .faq-visual .phone-frame{width:240px;}
   @media (max-width:880px){.faq-layout{grid-template-columns:1fr;}.faq-visual{display:none;}}
 
   /* ---------- Contacto ---------- */
@@ -204,6 +210,9 @@
   .check-item{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--neutral);}
   .check-item .dot{width:24px;height:24px;border:1px solid var(--indigo);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--indigo);flex-shrink:0;}
   .form{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+  .hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;}
+  .submit-note.is-error{color:#f87171;}
+  .submit-note.is-success{color:#4ade80;}
   .field label{display:block;font-size:14px;font-weight:600;color:var(--neutral);margin-bottom:8px;}
   .field input, .field select, .field textarea{
     width:100%;background:#f3f4f6;border:none;border-radius:8px;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--dark);
@@ -233,6 +242,7 @@
     .feat-grid, .industrias-grid, .cards-3{grid-template-columns:1fr;}
     .steps-grid{grid-template-columns:1fr 1fr;}
     .ch-card, .ch-card:first-child, .ch-card:last-child{border-radius:12px;border-left:1px solid var(--border);}
+    .hero-phone{display:none;}
   }
   @media (max-width:640px){
     .steps-grid{grid-template-columns:1fr;}
@@ -289,11 +299,15 @@
         <a href="#como-funciona" class="btn btn-ghost-on-indigo">Ver cómo funciona</a>
       </div>
     </div>
-  </div>
-  <div class="hero-dots">
-    <button class="hero-dot active" data-slide="0" aria-label="Slide 1"></button>
-    <button class="hero-dot" data-slide="1" aria-label="Slide 2"></button>
-    <button class="hero-dot" data-slide="2" aria-label="Slide 3"></button>
+    <div class="hero-phone">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <img class="hero-phone-img active" src="assets/img/padel club.png" alt="App strix — Padel Club">
+          <img class="hero-phone-img" src="assets/img/Coffee cv.png" alt="App strix — Coffee CV">
+          <img class="hero-phone-img" src="assets/img/el garaje.png" alt="App strix — El Garaje">
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -461,7 +475,13 @@
           <div class="acc-panel"><p>Los datos son tuyos. strix los usa únicamente para que vos puedas identificar y premiar a tus mejores clientes.</p></div>
         </div>
       </div>
-      <div class="faq-visual"><img src="assets/img/header-bar.jpg" alt="strix en El Garaje Burgers"></div>
+      <div class="faq-visual">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <img src="assets/img/el garaje.png" alt="App strix — El Garaje">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -482,22 +502,23 @@
     <div>
       <h3 style="font-size:24px;font-weight:700;margin-bottom:16px;">Ponete en contacto</h3>
       <form class="form" id="contact-form">
-        <div class="field"><label for="f-name">Nombre</label><input id="f-name" type="text" placeholder="Tu nombre" required></div>
-        <div class="field"><label for="f-email">Email</label><input id="f-email" type="email" placeholder="hola@tu-negocio.com" required></div>
+        <input type="text" name="company_website" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="field"><label for="f-name">Nombre</label><input id="f-name" name="name" type="text" placeholder="Tu nombre" required></div>
+        <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" placeholder="hola@tu-negocio.com" required></div>
         <div class="form-row">
-          <div class="field"><label for="f-phone">Teléfono</label><input id="f-phone" type="tel" placeholder="+598 09X XXX XXX"></div>
+          <div class="field"><label for="f-phone">Teléfono</label><input id="f-phone" name="phone" type="tel" placeholder="+598 09X XXX XXX"></div>
           <div class="field"><label for="f-industry">Industria</label>
-            <select id="f-industry">
+            <select id="f-industry" name="industry">
               <option value="">Tu rubro</option>
               <option>Gastronomía</option><option>Belleza</option><option>Deporte</option>
               <option>Salud</option><option>Retail</option><option>Servicios</option><option>Otro</option>
             </select>
           </div>
         </div>
-        <div class="field"><label for="f-business">Nombre del negocio</label><input id="f-business" type="text" placeholder="¿Cómo se llama tu negocio?"></div>
-        <div class="field"><label for="f-goal">¿Qué querés lograr?</label><textarea id="f-goal" placeholder="Contanos brevemente tu situación y qué objetivos tenés..."></textarea></div>
+        <div class="field"><label for="f-business">Nombre del negocio</label><input id="f-business" name="business" type="text" placeholder="¿Cómo se llama tu negocio?"></div>
+        <div class="field"><label for="f-goal">¿Qué querés lograr?</label><textarea id="f-goal" name="message" placeholder="Contanos brevemente tu situación y qué objetivos tenés..."></textarea></div>
         <button type="submit" class="btn btn-solid" style="margin-top:6px;">Enviar mensaje <i data-lucide="send" style="width:14px;height:14px" class="icon"></i></button>
-        <p class="submit-note">Sin spam. Tu info solo se usa para contactarte.</p>
+        <p class="submit-note" id="form-status">Sin spam. Tu info solo se usa para contactarte.</p>
       </form>
     </div>
   </div>
@@ -529,7 +550,7 @@
         <a href="#contacto" class="btn btn-dark" style="margin-bottom:14px;">Empezá ahora <i data-lucide="chevron-right" style="width:14px;height:14px" class="icon"></i></a>
         <a href="mailto:info@strix.fan">info@strix.fan</a>
         <div class="social-row">
-          <a href="#" aria-label="Instagram"><i data-lucide="instagram" class="icon" style="width:18px;height:18px"></i></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="icon" style="width:18px;height:18px"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
           <a href="#" aria-label="WhatsApp"><i data-lucide="message-circle" class="icon" style="width:18px;height:18px"></i></a>
         </div>
       </div>
@@ -543,16 +564,15 @@
 
     // Hero slider
     var slides = document.querySelectorAll('.hero-slide');
-    var dots = document.querySelectorAll('.hero-dot');
+    var phoneImgs = document.querySelectorAll('.hero-phone-img');
     var current = 0;
     function goTo(i){
       slides[current].classList.remove('active');
-      dots[current].classList.remove('active');
+      if(phoneImgs[current]) phoneImgs[current].classList.remove('active');
       current = i;
       slides[current].classList.add('active');
-      dots[current].classList.add('active');
+      if(phoneImgs[current]) phoneImgs[current].classList.add('active');
     }
-    dots.forEach(function(dot, i){ dot.addEventListener('click', function(){ goTo(i); }); });
     setInterval(function(){ goTo((current + 1) % slides.length); }, 5000);
 
     // FAQ accordion
@@ -591,11 +611,47 @@
       });
     });
 
-    // Contact form (static placeholder — no backend wired up)
-    document.getElementById('contact-form').addEventListener('submit', function(e){
+    // Contact form — submits to /api/contact (Vercel serverless function → Resend)
+    var contactForm = document.getElementById('contact-form');
+    var formStatus = document.getElementById('form-status');
+    contactForm.addEventListener('submit', function(e){
       e.preventDefault();
-      alert('¡Gracias! Te vamos a contactar a la brevedad.');
-      e.target.reset();
+      var submitBtn = contactForm.querySelector('button[type="submit"]');
+      var data = {
+        name: document.getElementById('f-name').value,
+        email: document.getElementById('f-email').value,
+        phone: document.getElementById('f-phone').value,
+        industry: document.getElementById('f-industry').value,
+        business: document.getElementById('f-business').value,
+        message: document.getElementById('f-goal').value,
+        company_website: contactForm.querySelector('[name="company_website"]').value
+      };
+      submitBtn.disabled = true;
+      formStatus.textContent = 'Enviando...';
+      formStatus.classList.remove('is-error', 'is-success');
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(function(res){ return res.json().then(function(body){ return { ok: res.ok, body: body }; }); })
+        .then(function(result){
+          if (result.ok && result.body.ok) {
+            formStatus.textContent = '¡Gracias! Te vamos a contactar a la brevedad.';
+            formStatus.classList.add('is-success');
+            contactForm.reset();
+          } else {
+            formStatus.textContent = result.body.error || 'No se pudo enviar. Probá de nuevo.';
+            formStatus.classList.add('is-error');
+          }
+        })
+        .catch(function(){
+          formStatus.textContent = 'No se pudo enviar. Revisá tu conexión e intentá de nuevo.';
+          formStatus.classList.add('is-error');
+        })
+        .finally(function(){
+          submitBtn.disabled = false;
+        });
     });
   });
 </script>
