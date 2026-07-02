@@ -61,7 +61,12 @@ export default function Footer() {
             </a>
             <a href="mailto:info@strix.fan">info@strix.fan</a>
             <div className="social-row">
-              <a href="#" aria-label="Instagram">
+              <a
+                href="https://www.instagram.com/strix.fan?utm_source=qr&igsh=MXA2d3JrNTZvNmdrag%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              >
                 <Instagram style={{ width: 18, height: 18 }} className="icon" />
               </a>
               <a href="#" aria-label="WhatsApp">
